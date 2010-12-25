@@ -1,4 +1,4 @@
-= Minequery-Rails
+= Minequery Rails
 
 A Rails plugin for Minequery.
 
