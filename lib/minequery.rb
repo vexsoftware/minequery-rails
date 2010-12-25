@@ -6,7 +6,7 @@ module Minequery
           query = TCPSocket.new(address, port)
           query.puts "QUERY"
 
-          server_port, player_count, player_list = nil
+          server_port, player_count, max_players, player_list = nil
 
           while line = query.gets
             line_bits = line.split(" ", 2)
@@ -16,6 +16,8 @@ module Minequery
                 server_port = line_bits[1].chomp
               when "PLAYERCOUNT" then
                 player_count = line_bits[1].chomp
+              when "MAXPLAYERS" then
+                max_players = line_bits[1].chomp
               when "PLAYERLIST" then
                 player_list = line_bits[1].chomp[1..-2].split(", ")
             end
@@ -23,7 +25,7 @@ module Minequery
 
           query.close
 
-          return { :server_port => server_port, :player_count => player_count, :player_list => player_list }
+          return { :server_port => server_port, :player_count => player_count, :max_players => max_players, :player_list => player_list }
         end
       rescue Exception
         return nil
