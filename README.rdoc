@@ -1,0 +1,7 @@
+= Minequery-Rails
+
+A Rails plugin for Minequery.
+
+= License
+
+Copyright (c) 2010 Kramer Campbell, released under the MIT license.
