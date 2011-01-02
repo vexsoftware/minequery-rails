@@ -1,27 +1,18 @@
 module Minequery
   module Methods
-    def query_server(address, port, timeout = 30)
+    def query_server(address, port = 25566, timeout = 30)
       begin
         timeout(timeout) do
           query = TCPSocket.new(address, port)
           query.puts "QUERY"
 
-          server_port, player_count, max_players, player_list = nil
+          response = query.read
+          response = response.split("\n")
 
-          while line = query.gets
-            line_bits = line.split(" ", 2)
-
-            case line_bits[0]
-              when "SERVERPORT" then
-                server_port = line_bits[1].chomp
-              when "PLAYERCOUNT" then
-                player_count = line_bits[1].chomp
-              when "MAXPLAYERS" then
-                max_players = line_bits[1].chomp
-              when "PLAYERLIST" then
-                player_list = line_bits[1].chomp[1..-2].split(", ")
-            end
-          end
+          server_port = response[0].split(" ", 2)[1]
+          player_count = response[1].split(" ", 2)[1]
+          max_players = response[2].split(" ", 2)[1]
+          player_list = response[3].split(" ", 2)[1].chomp[1..-2].split(", ")
 
           query.close
 
