@@ -4,4 +4,4 @@ A Rails plugin for Minequery.
 
 = License
 
-Copyright (c) 2010 {Kramer Campbell}[http://kramerc.com], released under the MIT license.
+Copyright (c) 2011 {Kramer Campbell}[http://kramerc.com], released under the MIT license.
