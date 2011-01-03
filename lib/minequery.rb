@@ -6,6 +6,9 @@ module Minequery
           beginning_time = Time.now
 
           query = TCPSocket.new(address, port)
+
+          end_time = Time.now
+
           query.puts "QUERY"
 
           response = query.read
@@ -17,8 +20,6 @@ module Minequery
           player_list = response[3].split(" ", 2)[1].chomp[1..-2].split(", ")
 
           query.close
-
-          end_time = Time.now
 
           return { :server_port => server_port, :player_count => player_count, :max_players => max_players, :player_list => player_list, :latency => (end_time - beginning_time) * 1000 }
         end
