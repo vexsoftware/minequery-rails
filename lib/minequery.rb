@@ -3,6 +3,8 @@ module Minequery
     def query_server(address, port = 25566, timeout = 30)
       begin
         timeout(timeout) do
+          beginning_time = Time.now
+
           query = TCPSocket.new(address, port)
           query.puts "QUERY"
 
@@ -16,7 +18,9 @@ module Minequery
 
           query.close
 
-          return { :server_port => server_port, :player_count => player_count, :max_players => max_players, :player_list => player_list }
+          end_time = Time.now
+
+          return { :server_port => server_port, :player_count => player_count, :max_players => max_players, :player_list => player_list, :latency => (end_time - beginning_time) * 1000 }
         end
       rescue Exception
         return nil
