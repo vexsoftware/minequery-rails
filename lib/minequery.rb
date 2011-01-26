@@ -17,7 +17,7 @@ module Minequery
           server_port = response[0].split(" ", 2)[1]
           player_count = response[1].split(" ", 2)[1]
           max_players = response[2].split(" ", 2)[1]
-          player_list = response[3].split(" ", 2)[1].chomp[1..-2].split(", ")
+          player_list = response[3].split(" ", 2)[1].chomp[1..-2].split(", ").sort
 
           query.close
 
