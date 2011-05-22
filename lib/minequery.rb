@@ -1,31 +1,62 @@
 module Minequery
-  module Methods
-    def query_server(address, port = 25566, timeout = 30)
-      begin
-        timeout(timeout) do
-          beginning_time = Time.now
+  def self.query(address, port = 25566, timeout = 30)
+    begin
+      timeout(timeout) do
+        beginning_time = Time.now
 
-          query = TCPSocket.new(address, port)
+        socket = TCPSocket.new(address, port)
 
-          end_time = Time.now
+        end_time = Time.now
 
-          query.puts "QUERY"
+        socket.puts "QUERY"
 
-          response = query.read
-          response = response.split("\n")
+        response = socket.read
+        response = response.split("\n")
 
-          server_port = response[0].split(" ", 2)[1]
-          player_count = response[1].split(" ", 2)[1]
-          max_players = response[2].split(" ", 2)[1]
-          player_list = response[3].split(" ", 2)[1].chomp[1..-2].split(", ").sort { |a,b| a.downcase <=> b.downcase }
+        server_port = response[0].split(" ", 2)[1].to_i
+        player_count = response[1].split(" ", 2)[1].to_i
+        max_players = response[2].split(" ", 2)[1].to_i
+        player_list = response[3].split(" ", 2)[1].chomp[1..-2].split(", ")
 
-          query.close
+        socket.close
 
-          return { :server_port => server_port, :player_count => player_count, :max_players => max_players, :player_list => player_list, :latency => (end_time - beginning_time) * 1000 }
-        end
-      rescue Exception
-        return nil
+        return { :server_port => server_port, :player_count => player_count, :max_players => max_players, :player_list => player_list, :latency => (end_time - beginning_time) * 1000 }
       end
+    rescue Exception
+      return nil
     end
+  end
+
+  def self.query_json(address, port = 25566, timeout = 30)
+    begin
+      timeout(timeout) do
+        beginning_time = Time.now
+
+        socket = TCPSocket.new(address, port)
+
+        end_time = Time.now
+
+        socket.puts "QUERY_JSON"
+
+        query = symbolize(ActiveSupport::JSON.decode(socket.read))
+        query[:latency] = (end_time - beginning_time) * 1000
+
+        socket.close
+
+        return query
+      end
+    rescue Exception
+      return nil
+    end
+  end
+
+  private
+
+  # Similar to symbolize_keys! but this underscores the keys before making them symbols.
+  def self.symbolize(hash)
+    hash.keys.each do |key|
+      hash[(key.underscore.to_sym rescue key) || key] = hash.delete(key)
+    end
+    hash
   end
 end
