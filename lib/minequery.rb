@@ -1,10 +1,10 @@
 module Minequery
-  def self.query(address, port = 25566, timeout = 30)
+  def self.query(address, port = 25566, timeout = 30, local_host = nil)
     begin
       timeout(timeout) do
         beginning_time = Time.now
 
-        socket = TCPSocket.new(address, port)
+        socket = TCPSocket.new(address, port, local_host)
 
         end_time = Time.now
 
@@ -27,12 +27,12 @@ module Minequery
     end
   end
 
-  def self.query_json(address, port = 25566, timeout = 30)
+  def self.query_json(address, port = 25566, timeout = 30, local_host = nil)
     begin
       timeout(timeout) do
         beginning_time = Time.now
 
-        socket = TCPSocket.new(address, port)
+        socket = TCPSocket.new(address, port, local_host)
 
         end_time = Time.now
 
